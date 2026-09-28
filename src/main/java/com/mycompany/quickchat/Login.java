@@ -1,18 +1,18 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package com.mycompany.quickchat;
 import java.util.Scanner;
 /**
  *
  * @author LENOVO
  */
-public class QuickChat {
-static Scanner input = new Scanner(System.in);
-    static String cellPhoneNumber;
-    static String username;
-    static String password;
+public class Login {
+    private static Scanner input = new Scanner(System.in);
+    private static String registeredUsername;
+    private static String registeredPassword;
+    private static String registeredCellPhoneNumber;
 
     public static boolean checkUsername(String username) {
         if (username.contains("_") && username.length() <= 5) {
@@ -53,52 +53,41 @@ static Scanner input = new Scanner(System.in);
         System.out.print("Enter username: ");
         String u = input.nextLine();
         if (!checkUsername(u)) {
-            return "Registration failed: Invalid username.";
+            return "Registration failed.";
         }
-        username = u;
+        registeredUsername = u;
 
         System.out.print("Enter password: ");
         String p = input.nextLine();
         if (!checkPasswordComplexity(p)) {
             System.out.println("Password is not correctly formatted; please ensure that the password contains at least 8 characters, a capital letter, a number, and a special character.");
-            return "Registration failed: Invalid password.";
+            return "Registration failed.";
         }
-        password = p;
+        registeredPassword = p;
         System.out.println("Password successfully captured.");
 
         System.out.print("Enter cell phone number: ");
         String c = input.nextLine();
         if (!checkCellPhoneNumber(c)) {
             System.out.println("Cell phone number is incorrectly formatted or does not contain a valid international code.");
-            return "Registration failed: Invalid cell number.";
+            return "Registration failed.";
         }
-        cellPhoneNumber = c;
+        registeredCellPhoneNumber = c;
         System.out.println("Cell phone number successfully captured.");
 
         return "User registered successfully.";
     }
 
-    public static boolean loginUser(String enteredUser, String enteredPass) {
-        return enteredUser.equals(username) && enteredPass.equals(password);
+    public static boolean loginUser(String enteredUsername, String enteredPassword) {
+        return enteredUsername.equals(registeredUsername) && enteredPassword.equals(registeredPassword);
     }
-    public static void main(String[] args) {
-        String regStatus = registerUser();
-        System.out.println(regStatus);
 
-        if (regStatus.equals("User registered successfully.")) {
-            System.out.println("\n--- LOGIN ---");
-            System.out.print("Enter username: ");
-            String loginUser = input.nextLine();
-            System.out.print("Enter password: ");
-            String loginPass = input.nextLine();
-
-            if (loginUser(loginUser, loginPass)) {
-                System.out.println("Welcome " + loginUser + ", it is great to see you again.");
-            } else {
-                System.out.println("Username or password incorrect, please try again.");
-            }
+    public static String returnLoginStatus(boolean isLoggedIn, String username) {
+        if (isLoggedIn) {
+            return "Welcome " + username + ", it is great to see you again.";
+        } else {
+            return "Username or password incorrect, please try again.";
         }
     }
 }
-    
 
