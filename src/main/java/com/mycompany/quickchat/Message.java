@@ -4,6 +4,12 @@
  */
 package com.mycompany.quickchat;
 import java.util.Random;
+import java.util.Random;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 /**
  *
  * @author LENOVO
@@ -16,6 +22,7 @@ public class Message {
     private static int totalMessagesSent = 0;
 
     public Message(String recipientNumber, String messageContent, int messageCounter) {
+        
         this.messageID = createMessageID();
         this.recipientNumber = recipientNumber;
         this.messageContent = messageContent;
@@ -75,8 +82,17 @@ public class Message {
     public static int returnTotalMessages() {
         return totalMessagesSent;
     }
+   public static void storeMessage(java.util.List<Message> messageList, String filename) {
+        try {
+            com.google.gson.Gson gson = new com.google.gson.GsonBuilder().setPrettyPrinting().create();
+            String jsonOutput = gson.toJson(messageList);
+            java.nio.file.Files.writeString(java.nio.file.Paths.get(filename), jsonOutput);
+            System.out.println("Message successfully stored.");
+        } catch (Exception e) {
+            System.out.println("Error saving messages to JSON: " + e.getMessage());
+        }
+    }
 
-    public static void storeMessage() {
-    
-    }   
+
+   
 }
