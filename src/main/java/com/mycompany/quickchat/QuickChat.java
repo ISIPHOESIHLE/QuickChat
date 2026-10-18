@@ -82,20 +82,85 @@ static Scanner input = new Scanner(System.in);
         return enteredUser.equals(username) && enteredPass.equals(password);
     }
     public static void main(String[] args) {
-        String regStatus = registerUser();
+      Scanner input = new Scanner(System.in);
+
+        String regStatus = Login.registerUser();
         System.out.println(regStatus);
+        if (!regStatus.equals("User registered successfully.")) {
+            return;
+        }
 
-        if (regStatus.equals("User registered successfully.")) {
-            System.out.println("\n--- LOGIN ---");
-            System.out.print("Enter username: ");
-            String loginUser = input.nextLine();
-            System.out.print("Enter password: ");
-            String loginPass = input.nextLine();
+        System.out.println("\n--- LOGIN SCREEN ---");
+        System.out.print("Enter username: ");
+        String u = input.nextLine();
+        System.out.print("Enter password: ");
+        String p = input.nextLine();
 
-            if (loginUser(loginUser, loginPass)) {
-                System.out.println("Welcome " + loginUser + ", it is great to see you again.");
+        boolean loggedIn = Login.loginUser(u, p);
+        System.out.println(Login.returnLoginStatus(loggedIn, u));
+        if (!loggedIn) {
+            return;
+        }
+
+        System.out.println("\nWelcome to QuickChat.");
+        boolean running = true;
+        int counter = 0;
+
+        while (running) {
+            System.out.println("\n1) Send Messages");
+            System.out.println("2) Show recently sent messages");
+            System.out.println("3) Quit");
+            System.out.print("Choose an option: ");
+            
+            int choice = input.nextInt();
+            input.nextLine();
+
+            if (choice == 1) {
+                System.out.print("How many messages? ");
+                int total = input.nextInt();
+                input.nextLine();
+
+                for (int i = 1; i <= total; i++) {
+                    System.out.println("\nMessage " + i);
+                    
+                    System.out.print("Recipient cell: ");
+                    String cell = input.nextLine();
+                    while (!Message.checkRecipientCell(cell)) {
+                        System.out.print("Invalid format. Enter cell: ");
+                        cell = input.nextLine();
+                    }
+
+                    System.out.print("Enter message (max 250 chars): ");
+                    String text = input.nextLine();
+                    while (text.length() > 250) {
+                        System.out.println("Please enter a message of less than 250 characters.");
+                        System.out.print("Enter message: ");
+                        text = input.nextLine();
+                    }
+                    System.out.println("Message ready to send.");
+
+                    counter++;
+                    String id = Message.createMessageID();
+                    String hash = Message.createMessageHash(id, counter, text);
+
+                    System.out.println("1) Send | 0) Discard | 2) Store");
+                    int action = input.nextInt();
+                    input.nextLine();
+
+                    System.out.println(Message.sentMessage(action));
+                    if (action == 1 || action == 2) {
+                        System.out.println("\n" + Message.printMessages(id, hash, cell, text));
+                    }
+                }
+                System.out.println("\nTotal sent: " + Message.returnTotalMessages());
+
+            } else if (choice == 2) {
+                System.out.println("Coming Soon.");
+            } else if (choice == 3) {
+                System.out.println("Goodbye!");
+                running = false;
             } else {
-                System.out.println("Username or password incorrect, please try again.");
+                System.out.println("Invalid choice.");
             }
         }
     }
