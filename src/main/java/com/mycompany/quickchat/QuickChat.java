@@ -4,6 +4,9 @@
 
 package com.mycompany.quickchat;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author LENOVO
@@ -82,7 +85,8 @@ static Scanner input = new Scanner(System.in);
         return enteredUser.equals(username) && enteredPass.equals(password);
     }
     public static void main(String[] args) {
-      Scanner input = new Scanner(System.in);
+     Scanner input = new Scanner(System.in);
+        List<Message> savedMessages = new ArrayList<>();
 
         String regStatus = Login.registerUser();
         System.out.println(regStatus);
@@ -107,7 +111,8 @@ static Scanner input = new Scanner(System.in);
         int counter = 0;
 
         while (running) {
-            System.out.println("\n1) Send Messages");
+            System.out.println("\n--- QUICKCHAT MENU ---");
+            System.out.println("1) Send Messages");
             System.out.println("2) Show recently sent messages");
             System.out.println("3) Quit");
             System.out.print("Choose an option: ");
@@ -143,19 +148,36 @@ static Scanner input = new Scanner(System.in);
                     String id = Message.createMessageID();
                     String hash = Message.createMessageHash(id, counter, text);
 
+                    Message msgObj = new Message(cell, text, counter);
+
                     System.out.println("1) Send | 0) Discard | 2) Store");
                     int action = input.nextInt();
                     input.nextLine();
 
                     System.out.println(Message.sentMessage(action));
+                    
                     if (action == 1 || action == 2) {
                         System.out.println("\n" + Message.printMessages(id, hash, cell, text));
+                    }
+
+                    if (action == 2) {
+                        savedMessages.add(msgObj);
+                        Message.storeMessage(savedMessages, "quickChatMessageStorage.json");
                     }
                 }
                 System.out.println("\nTotal sent: " + Message.returnTotalMessages());
 
             } else if (choice == 2) {
-                System.out.println("Coming Soon.");
+              System.out.println("\n--- RECENTLY STORED MESSAGES ---");
+                if (savedMessages.isEmpty()) {
+                    System.out.println("No messages have been stored yet.");
+                } else {
+                    for (Message m : savedMessages) {
+                        System.out.println("--------------------------------");                    
+                        System.out.println("Recipient: " + m);
+                    }
+                    System.out.println("--------------------------------");
+                }
             } else if (choice == 3) {
                 System.out.println("Goodbye!");
                 running = false;
