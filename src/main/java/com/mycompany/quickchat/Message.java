@@ -4,7 +4,6 @@
  */
 package com.mycompany.quickchat;
 import java.util.Random;
-import java.util.Random;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.nio.file.Files;
