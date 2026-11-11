@@ -25,7 +25,6 @@ public class LoginTest {
 
     @Test
     public void testCheckPasswordComplexityValid() {
-        // Test a password with >= 8 chars 1 uppercase 1 number 1 special char
         assertTrue(Login.checkPasswordComplexity("Ch@t1234"));
     }
 
